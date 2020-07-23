@@ -85,7 +85,7 @@ class LinkedList:
             current = current.get_next_node()
 
         return current_max_val
-    
+
     def remove_tail(self):
         if self.tail is None:
             return None
