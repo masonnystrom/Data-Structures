@@ -17,16 +17,51 @@ class BSTNode:
 
     # Insert the given value into the tree
     def insert(self, value):
-        pass
+        # compare input value with value of the node
+        # if the value is < Node's value
+        if value < self.value:
+            # we need to go left
+            # if there's no node to compare the input value tok
+            if self.left == None:
+                # we can wrap the value in a BSTNode and park it
+                self.left = BSTNode(value)
+            # otherwise there is a child
+            else:
+            # call the left child's insert method
+                self.left.insert(value)
+        # otherwise, value >= Node's value
+        else:
+            # we need to go right, but let's see if we see there is no right child
+            if self.right == None:
+            # then we can wrap the value in a BSTNode and park it
+                self.right = BSTNode(value)
+            # otherwise there is a child
+            else:
+            # call right child's insert method
+                self.right.insert(value)
 
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
-        pass
+        if target == self.value:
+            return True
+        # check left side
+        elif target < self.value and self.left:
+            return self.left.contains(target)
+        
+        # check right side
+        elif target > self.value and self.right:
+            return self.right.contains(target)
+        
+        else:
+            return None
 
     # Return the maximum value found in the tree
     def get_max(self):
-        pass
+        if self.right == None:
+            return self.value
+        else:
+            return self.right.get_max()
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
@@ -63,7 +98,7 @@ class BSTNode:
 """
 This code is necessary for testing the `print` methods
 """
-bst = BinarySearchTree(1)
+bst = BSTNode(1)
 
 bst.insert(8)
 bst.insert(5)
