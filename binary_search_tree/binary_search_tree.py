@@ -1,3 +1,7 @@
+from queue import Queue
+from stack import Stack
+from collections import deque
+
 """
 Binary search trees are a data structure that enforce an ordering over 
 the data they store. That ordering in turn makes it a lot more efficient 
@@ -48,16 +52,16 @@ class BSTNode:
         # check left side
         elif target < self.value and self.left:
             return self.left.contains(target)
-        
         # check right side
         elif target > self.value and self.right:
             return self.right.contains(target)
-        
         else:
             return None
 
     # Return the maximum value found in the tree
     def get_max(self):
+        """max value will be the right most value"""
+        # recuriseve go right until you can't go right
         if self.right == None:
             return self.value
         else:
@@ -65,39 +69,128 @@ class BSTNode:
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        pass
+        # apply to root node
+        fn(self.value)
+        # recursively apply fn to left nodes
+        if self.left:
+            self.left.for_each(fn)
+        # recursively apply fn to righ tnodes
+        if self.right:
+            self.right.for_each(fn)
 
-    # Part 2 -----------------------
+    def iterative_depth_first_for_each(self,fn):
+        # Depth first: LIFO
+        # use a stack to traverse the tree and add nodes
+        stack = []
+        stack.append(self) # append root node
 
-    # Print all the values in order from low to high
-    # Hint:  Use a recursive, depth first traversal
-    def in_order_print(self):
-        pass
+        while len(stack) > 0:
+            current = stack.pop()
+            # add current node's right child first
+            if current.right:
+                stack.append(current.stack)
+
+            if current.left:
+                stack.append(current.left)
+
+            fn(current.value)
+
+
+    def iterative_breadth_first_for_each(self,fn):
+        # more like a cue, FIFO
+        queue = deque()
+        queue.append(self)
+
+        while len(queue) > 0:
+            current = queue.popleft()
+
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
+        fn(current.value)
+
+# Part 2 -----------------------
+
+# Print all the values in order from low to high
+# Hint:  Use a recursive, depth first traversal
+
+    def in_order_print(self, node):
+        if self.left:
+            self.left.in_order_print(self.left)
+        print(self.value)
+        if self.right:
+            self.right.in_order_print(self.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
-    def bft_print(self):
-        pass
+
+    def dft_print(self, node):
+        """ depth first traversal explores the entire length of a branch on a tree, retreats then does the same thing on the first unexplored branch."""
+        stack = Stack()
+        stack.push(node)
+        while len(stack) > 0:
+            current = stack.pop()
+            print(current.value)
+            if current.left:
+                stack.push(current.left)
+            if current.right:
+                stack.push(current.right)
+
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
-    def dft_print(self):
-        pass
+    def bft_print(self, node):
+        """bredth first traversal explores all nodes on a given layer, adds those nodes to a queue, then explores the next layer"""
+        #1. define deque
+        #2. add self to deque
+        #3. iterate: while there are items in the deque 
+        #4. dequeue/pop from deque, point to result, and print
+        #5. add left and right children to deque
+        qq = deque()
+        qq.append(node)
+        while len(qq) > 0:
+            current = qq.popleft()
+            print(current.value)
+            if current.left:
+                qq.append(current.left)
+            if current.right:
+                qq.append(current.right)
+        
+        # que = Queue()
+        # que.enqueue(self)
+        # while len(que) > 0:
+        #     current = que.dequeue()
+        #     print(current.value)
+        #     if current.left:
+        #         que.enqueue(current.left)
+        #     if current.right:
+        #         que.enqueue(current.right)
+
 
     # Stretch Goals -------------------------
     # Note: Research may be required
 
     # Print Pre-order recursive DFT
-    def pre_order_dft(self):
-        pass
+    def pre_order_dft(self, node):
+        '''node the list of data objects so far in the traversal'''
+        print(node.value)
+        if node.left:
+            node.left.pre_order_dft(node.left)
+        if node.right:
+            node.right.pre_order_dft(node.right)
 
-    # Print Post-order recursive DFT
-    def post_order_dft(self):
-        pass
+    # # Print Post-order recursive DFT
+    def post_order_dft(self, node):
+        """Node is the list of values so far in the traversal """
+        if node.left:
+            self.post_order_dft(node.left)
+        if node.right:
+            self.post_order_dft(node.right)
+        print(node.value)
 
-"""
-This code is necessary for testing the `print` methods
-"""
+# """This code is necessary for testing the `print` methods"""
+
 bst = BSTNode(1)
 
 bst.insert(8)
@@ -108,13 +201,13 @@ bst.insert(3)
 bst.insert(4)
 bst.insert(2)
 
-bst.bft_print()
-bst.dft_print()
+# bst.bft_print()
+# bst.dft_print()
 
-print("elegant methods")
-print("pre order")
-bst.pre_order_dft()
-print("in order")
-bst.in_order_dft()
-print("post order")
-bst.post_order_dft()  
+# print("elegant methods")
+# print("pre order")
+# bst.pre_order_dft()
+# print("in order")
+# bst.in_order_dft()
+# print("post order")
+# bst.post_order_dft()  
